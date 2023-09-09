@@ -5,7 +5,7 @@ from support import import_folder
 
 class Player(pg.sprite.Sprite):
 
-    def __init__(self,pos,group) -> None:
+    def __init__(self,pos,group,collision_sprites) -> None:
         super().__init__(group)
 
         self.import_assets()
@@ -15,7 +15,6 @@ class Player(pg.sprite.Sprite):
         # general set up
         self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center = pos)
-        self.hitbox = self.rect.copy().inflate((-126,-70))
         self.z = LAYERS['main']
 
 
@@ -23,6 +22,11 @@ class Player(pg.sprite.Sprite):
         self.direction = pg.math.Vector2()
         self.pos = pg.math.Vector2(self.rect.center)
         self.speed = 200
+
+        #collision
+        self.collison_sprites = collision_sprites
+        self.hitbox = self.rect.copy().inflate((-126,-70))
+
 
         # timers
         self.timers = {
@@ -62,15 +66,12 @@ class Player(pg.sprite.Sprite):
             full_path = "Animations\graphics\character/"+animation
             self.animations[animation] = import_folder(full_path) # we are using import_folder cuz it reusable
 
-
     def animate(self,dt):
         self.frame_index += 4*dt
         if self.frame_index >= len(self.animations[self.status]):
             self.frame_index = 0
 
         self.image = self.animations[self.status][int(self.frame_index)]
-
-
 
     def input(self):
         keys = pg.key.get_pressed()
@@ -125,9 +126,7 @@ class Player(pg.sprite.Sprite):
                 self.seed_index += 1
                 self.seed_index = self.seed_index if self.seed_index<len(self.seeds) else 0
                 self.selected_seed = self.seeds[self.seed_index]
-                
-
-            
+                    
     def get_status(self):
         # if player is no moving then its speed is 0
         if self.direction.magnitude() == 0:
@@ -140,6 +139,25 @@ class Player(pg.sprite.Sprite):
     def update_timer(self):
         for timer in self.timers.values(): timer.update()
 
+    def collision(self,direction):
+        for sprite in self.collison_sprites.sprites():
+            if hasattr(sprite , 'hitbox'):
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if direction == 'horizontal':
+                        if self.direction.x > 0: #left
+                            self.hitbox.right = sprite.hitbox.left
+                        if self.direction.x < 0: # right
+                            self.hitbox.left = sprite.hitbox.right
+                        self.rect.centerx = self.hitbox.centerx
+                        self.pos.x = self.hitbox.centerx
+
+                    if direction == 'vertical':
+                        if self.direction.y > 0: # down
+                            self.hitbox.bottom = sprite.hitbox.top
+                        if self.direction.y < 0: # up
+                            self.hitbox.top = sprite.hitbox.bottom
+                        self.rect.centery = self.hitbox.centery
+                        self.pos.y = self.hitbox.centery
 
     def move(self,dt):
         
@@ -155,13 +173,16 @@ class Player(pg.sprite.Sprite):
         
         # horizontal movement
         self.pos.x += self.direction.x*self.speed*dt
-        self.rect.centerx = self.pos.x
+        self.hitbox.centerx = round(self.pos.x)
+        self.rect.centerx = self.hitbox.centerx
+        self.collision('horizontal')
 
         # vetical movement
         self.pos.y += self.direction.y*self.speed*dt
-        self.rect.centery = self.pos.y
+        self.hitbox.centery = round(self.pos.y)
+        self.rect.centery = self.hitbox.centery
+        self.collision('vertical')
 
-    
     def update(self,dt):
         self.input()
         self.get_status()
