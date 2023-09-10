@@ -36,7 +36,7 @@ class Player(pg.sprite.Sprite):
             'seed switch' : Timer(200),
         }
 
-        # toools
+        # tools
         self.tools = ['hoe','axe','water']
         self.tool_index = 0
         self.selected_tool = self.tools[self.tool_index]
@@ -45,6 +45,14 @@ class Player(pg.sprite.Sprite):
         self.seeds = ['corn','tomato']
         self.seed_index = 0
         self.selected_seed = self.seeds[self.seed_index]
+
+        # inventory
+        self.item_inventory = {
+            'wood' :   0,
+            'apple' :  0,
+            'corn' :   0,
+            'tomato' : 0
+        }
 
         # interaction
         self.tree_sprites = tree_sprites

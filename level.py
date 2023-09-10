@@ -51,7 +51,13 @@ class Level:
 
         # Trees
         for obj in tmx_data.get_layer_by_name('Trees'):
-            Tree((obj.x,obj.y),obj.image,[self.all_sprites,self.collision_sprites , self.tree_sprites],obj.name)
+            Tree(
+                pos = (obj.x,obj.y),
+                surf = obj.image,
+                groups = [self.all_sprites,self.collision_sprites , self.tree_sprites],
+                name = obj.name,
+                player_add = self.player_add
+                )
 
         # wild flowers
         for obj in tmx_data.get_layer_by_name('Decoration'):
@@ -78,6 +84,9 @@ class Level:
             groups=self.all_sprites,
             z = LAYERS['ground']
         )
+
+    def player_add(self,item):
+        self.player.item_inventory[item] += 1
 
     def run(self,dt):
         self.display_surf.fill('black')
