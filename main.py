@@ -20,8 +20,6 @@ class Game:
                     pg.quit()
                     sys.exit()
 
-            
-
             dt = self.clock.tick()/1000
             self.level.run(dt)
             pg.display.update()
