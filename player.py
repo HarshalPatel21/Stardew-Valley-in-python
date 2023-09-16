@@ -5,7 +5,7 @@ from support import import_folder
 
 class Player(pg.sprite.Sprite):
 
-    def __init__(self,pos,group,collision_sprites,tree_sprites) -> None:
+    def __init__(self,pos,group,collision_sprites,tree_sprites,interaction) -> None:
         super().__init__(group)
 
         self.import_assets()
@@ -56,6 +56,8 @@ class Player(pg.sprite.Sprite):
 
         # interaction
         self.tree_sprites = tree_sprites
+        self.interaction = interaction
+        self.sleep = False
 
 
     def use_tool(self):
@@ -100,7 +102,7 @@ class Player(pg.sprite.Sprite):
     def input(self):
         keys = pg.key.get_pressed()
 
-        if not self.timers['tool use'].active:
+        if not self.timers['tool use'].active and not self.sleep :
             #directions
             if keys[pg.K_UP]:
                 self.direction.y = -1
@@ -150,6 +152,15 @@ class Player(pg.sprite.Sprite):
                 self.seed_index += 1
                 self.seed_index = self.seed_index if self.seed_index<len(self.seeds) else 0
                 self.selected_seed = self.seeds[self.seed_index]
+
+            if keys[pg.K_RETURN]:
+                coillided_interaction_sprite = pg.sprite.spritecollide(self,self.interaction,False)
+                if coillided_interaction_sprite:
+                    if coillided_interaction_sprite[0].name == 'Trader':
+                        pass
+                    else:
+                        self.status = 'left_idle'
+                        self.sleep = True
                     
     def get_status(self):
         # if player is no moving then its speed is 0
