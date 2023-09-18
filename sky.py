@@ -4,6 +4,23 @@ from support import import_folder
 from sprites import Generic
 from random import randint , choice
 
+class Sky:
+    # night time
+    def __init__(self) -> None:
+        self.display_surface = pg.display.get_surface()
+        self.full_surf = pg.Surface((SCREEN_WIDTH,SCREEN_HEIGHT))
+        self.start_color = [255,255,255]  # day
+        self.end_color = (38,101,189)  # night
+
+
+    def display(self,dt):
+        for index , value in enumerate(self.end_color):
+            if self.start_color[index] > value:
+                self.start_color[index] -= 2*dt 
+
+        self.full_surf.fill(self.start_color)
+        self.display_surface.blit(self.full_surf,(0,0),special_flags=pg.BLEND_RGBA_MULT)
+
 class Drop(Generic):
     def __init__(self, surf,pos,moving, groups, z) -> None:
         
@@ -29,7 +46,6 @@ class Drop(Generic):
         # timer 
         if pg.time.get_ticks() - self.start_time >= self.lifetime:
             self.kill()
-
 
 class Rain:
     def __init__(self,all_sprites) -> None:
