@@ -60,7 +60,6 @@ class Player(pg.sprite.Sprite):
         self.sleep = False
         self.soil_layer = soil_layer
 
-
     def use_tool(self):
         if self.selected_tool == 'hoe' :
             self.soil_layer.get_hit(self.target_pos)
@@ -76,9 +75,8 @@ class Player(pg.sprite.Sprite):
     def get_target_pos(self):
         self.target_pos = self.rect.center + PLAYER_TOOL_OFFSET[self.status.split('_')[0]]
 
-
     def use_seed(self):
-        pass
+        self.soil_layer.plant_seed(self.target_pos , self.selected_seed)
 
     def import_assets(self):
         self.animations = {
