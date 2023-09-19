@@ -75,7 +75,6 @@ class Tree(Generic):
         self.health = 5
         self.alive = True
         self.stump_surf = pg.image.load(f'Animations/graphics/stumps/{"small" if name == "Small" else "large"}.png').convert_alpha()
-        self.invul_timer = Timer(200)
 
 
         #apples 
@@ -132,7 +131,7 @@ class Tree(Generic):
 
     def create_fruit(self):
         for pos in self.apple_pos:
-            if randint(0,10) < 2 :
+            if randint(0,10) < 2 and self.alive:
                 x = pos[0] + self.rect.left 
                 y = pos[1] + self.rect.top
                 Generic(

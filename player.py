@@ -48,8 +48,8 @@ class Player(pg.sprite.Sprite):
 
         # inventory
         self.item_inventory = {
-            'wood' :   20,
-            'apple' :  20,
+            'wood' :   0,
+            'apple' :  0,
             'corn' :   0,
             'tomato' : 0
         }

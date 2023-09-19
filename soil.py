@@ -175,6 +175,7 @@ class SoilLayer:
                         soil= soil_sprite,
                         check_watered=self.check_watered
                     )
+                    
 
     def update_plants(self):
         for plant in self.plant_sprites.sprites():

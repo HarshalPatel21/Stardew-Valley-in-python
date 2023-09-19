@@ -35,7 +35,7 @@ class Level:
         
         # sky
         self.rain = Rain(self.all_sprites)
-        self.raining = randint(0,10) > 3
+        self.raining = randint(0,10) > 7
         self.soil_layer.raining = self.raining
         self.sky =Sky()
 
@@ -44,7 +44,7 @@ class Level:
         self.menu = Menu(self.player,self.toggle_shop)
 
         self.success_sound = pg.mixer.Sound('Animations/audio\success.wav')
-        self.success_sound.set_volume(0.15)
+        self.success_sound.set_volume(0.08)
         self.music = pg.mixer.Sound('Animations/audio\music.mp3')
         self.music.set_volume(0.05)
         self.music.play(loops=-1)
@@ -147,7 +147,7 @@ class Level:
         # soil 
         self.soil_layer.remove_water()
 
-        self.raining = randint(0,10) > 3
+        self.raining = randint(0,10) > 7
         self.soil_layer.raining = self.raining
         if self.raining :
             self.soil_layer.water_all()
@@ -218,10 +218,6 @@ class CameraGroup(pg.sprite.Group):
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image , offset_rect)
 
-        # for sprite in sorted(self.sprites(), key=lambda sprite: sprite.z * 10000 + sprite.rect.centery):
-        #     offset_rect = sprite.rect.copy()  
-        #     offset_rect.center -= self.offset  
-        #     self.display_surface.blit(sprite.image, offset_rect) 
 
     
 
