@@ -76,6 +76,13 @@ class SoilLayer:
         self.create_soil_grid()
         self.create_hit_rects()
 
+        #sounds 
+        self.hoe_sound = pg.mixer.Sound('Animations/audio\hoe.wav')
+        self.hoe_sound.set_volume(0.05)
+
+        self.plant_sound = pg.mixer.Sound('Animations/audio\plant.wav')
+        self.plant_sound.set_volume(0.05)
+
     def create_soil_grid(self):
         ground = pg.image.load('Animations\graphics\world\ground.png') # since we are not showing it to player we dont need to convert
         h_tiles , v_tiles = ground.get_width() // TILE_SIZE , ground.get_height() // TILE_SIZE
@@ -97,6 +104,7 @@ class SoilLayer:
     def get_hit(self,point):
         for rect in self.hit_rects:
             if rect.collidepoint(point):
+                self.hoe_sound.play()
                 x = rect.x // TILE_SIZE # converting pixel position to tile positin
                 y = rect.y // TILE_SIZE
 
@@ -153,13 +161,14 @@ class SoilLayer:
     def plant_seed(self,target_pos,seed):
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(target_pos):
+                self.plant_sound.play()
 
                 x = soil_sprite.rect.x // TILE_SIZE
                 y = soil_sprite.rect.y // TILE_SIZE
 
                 if 'P' not in self.grid[y][x]:
                     self.grid[y][x].append('P')
-
+                    # self.p.seed_inventory[self.selected_seed] -= 1
                     Plant(
                         plant_type= seed,
                         groups = [self.all_sprites , self.plant_sprites, self.collision_sprites],

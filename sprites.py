@@ -20,8 +20,6 @@ class Interaction(Generic):
         super().__init__(pos, surf, groups)
         self.name = name
 
-
-
 class Water(Generic):
     def __init__(self, pos, frames, groups) -> None:
         # animation setup 
@@ -69,7 +67,6 @@ class Particle(Generic):
         if current_time - self.start_time > self.duration:
             self.kill()
 
-
 class Tree(Generic):
     def __init__(self, pos, surf, groups,name,player_add) -> None:
         super().__init__(pos, surf, groups)
@@ -89,10 +86,15 @@ class Tree(Generic):
 
         self.player_add = player_add
 
+        # sound
+        self.axe_sound = pg.mixer.Sound('Animations/audio/axe.mp3')
 
     def damage(self):
         # damage tree 
         self.health -= 1
+
+        # play sound 
+        self.axe_sound.play()
 
         # remove apple
         if len(self.apple_sprites.sprites()) > 0:
